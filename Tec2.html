@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gaboexatec - 21 Preguntas</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#f4f7fb,#e8eef8);color:#1f2937}
+.app{max-width:780px;margin:auto;padding:14px}.header{background:#b91c1c;color:#fff;border-radius:18px;padding:20px;margin-bottom:14px;box-shadow:0 8px 24px #0002}
+h1{margin:0 0 5px;font-size:27px}.header p{margin:0}.progress{height:9px;background:#ffffff55;border-radius:99px;margin-top:14px;overflow:hidden}.bar{height:100%;background:#22c55e;width:0;transition:.25s}
+.card{background:#fff;border-radius:18px;padding:22px;box-shadow:0 6px 22px #0002}.number{font-weight:bold;color:#b91c1c;margin-bottom:10px}.question{font-size:20px;font-weight:700;line-height:1.45;margin:0 0 18px}
+.option{display:flex;gap:12px;align-items:flex-start;border:2px solid #e5e7eb;border-radius:14px;padding:14px;margin:9px 0;cursor:pointer}.option:hover{background:#f8fafc}.option.selected{border-color:#2563eb;background:#eff6ff}.letter{min-width:30px;height:30px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-weight:bold}.selected .letter{background:#2563eb;color:#fff}.text{line-height:1.4}
+.actions{display:flex;gap:10px;margin-top:20px}.actions button{flex:1}.primary,.secondary{border:0;border-radius:12px;padding:13px 18px;font-size:16px;font-weight:bold;cursor:pointer}.primary{background:#b91c1c;color:white}.secondary{background:#e5e7eb;color:#111827}.primary:disabled,.secondary:disabled{opacity:.45}
+.score{text-align:center;font-size:23px;font-weight:bold;margin:10px}.review{border:1px solid #e5e7eb;border-radius:14px;padding:14px;margin:11px 0;background:#fafafa}.review.correct{border-left:6px solid #16a34a}.review.wrong{border-left:6px solid #dc2626}.review h3{font-size:16px;line-height:1.4;margin:0 0 8px}.correctText{color:#15803d;font-weight:bold}.wrongText{color:#b91c1c;font-weight:bold}.note{font-size:13px;color:#6b7280;margin-top:8px}
+@media(max-width:520px){.app{padding:9px}.card{padding:16px}.question{font-size:18px}.actions{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="header"><h1>GABOEXATEC</h1><p>Juego de examen — 21 preguntas</p><div class="progress"><div class="bar" id="bar"></div></div><div id="counter"></div></div>
+<div id="game" class="card"></div>
+</div>
+<script>
+const questions=[
+{q:"¿Cuáles son los niveles del Total Solidario usados para calcular el Aporte Laboral Solidario?",o:["Bs 13.000, 25.000 y 35.000","Bs 15.000, 25.000 y 35.000","Bs 13.000, 26.000 y 39.000","Bs 10.000, 20.000 y 30.000"],a:0},
+{q:"Cuando una empresa compra bienes o servicios a contribuyentes de regímenes especiales, ¿qué debe hacer?",o:["Pedir factura","Pedir factura aunque no tenga crédito fiscal","No emiten factura, por lo que debe realizar retenciones impositivas","No emiten factura, pedir otros documentos"],a:2},
+{q:"¿Según la Ley General del Trabajo, cómo se paga el trabajo en domingo?",o:["Triple","100% de recargo","Doble","150% de recargo"],a:0},
+{q:"¿Cómo se denomina la actividad que consiste en el recuento físico del efectivo y sus equivalentes en poder del cajero?",o:["Arqueo de caja","Valuación del disponible","Procedimientos de control interno","Procedimiento de determinación de faltantes y sobrantes"],a:0},
+{q:"¿Qué principio contable se refiere a la necesidad de mantener la consistencia en los métodos contables de un período a otro?",o:["Prudencia","Realización","Uniformidad","Entidad económica"],a:2},
+{q:"¿Cuál es el principio contable que indica que los estados financieros deben incluir toda la información significativa para que los usuarios puedan tomar decisiones informadas?",o:["Materialidad","Entidad económica","Valuación al costo","Prudencia"],a:0},
+{q:"¿Cuáles son los porcentajes aplicados al Aporte Nacional Solidario para los Totales Solidarios de los trabajadores?",o:["1,15%, 5,74% y 11,48%","1,71%, 2% y 3,5%","1%, 5% y 10%","5%, 10% y 15%"],a:0},
+{q:"¿Quiénes son considerados usuarios internos de la contabilidad?",o:["Nuevos inversionistas, directores y administradores","Socios, empleados y sindicatos","Sindicatos, administradores y gobierno","Proveedores, acreedores y público"],a:1},
+{q:"¿Qué formulario se usa para declarar y pagar el Impuesto RC-IVA retenido a los dependientes?",o:["Formulario 608","Formulario 604","Formulario 605","Formulario 1000"],a:0},
+{q:"Según la Ley General del Trabajo, ¿cuál es la jornada laboral máxima para varones?",o:["35 horas semanales","40 horas semanales","48 horas semanales","42 horas semanales"],a:2},
+{q:"¿Qué impacto tiene la subvaluación de los inventarios en la utilidad de la empresa?",o:["A menor inventario, menor costo y menor utilidad","A menor inventario, mayor costo y mayor utilidad","A menor inventario, mayor costo y menor utilidad","A menor inventario, menor costo y mayor utilidad"],a:2},
+{q:"En sesión del Consejo Técnico-Pedagógico, el Rector critica su gestión de taller por baja tasa de aprobación, omitiendo que solicitudes de insumos y mantenimiento no fueron atendidas. ¿Cuál es la acción más adecuada para demostrar autorregulación emocional?",o:["Detallar cronológicamente las solicitudes responsabilizando a la administración.","Expresar descontento y solicitar suspensión de la reunión hasta contar con mediador.","Aceptar la observación sin comentarios para evitar escalamiento.","Mantener postura equilibrada, validar la preocupación y responder de manera constructiva."],a:3,n:"La parte final de la opción D está cortada en la fotografía; se conserva el sentido visible de la respuesta."},
+{q:"En el contexto del activo disponible de una empresa, ¿cómo se considera la moneda extranjera que posee?",o:["Equivalentes de efectivo","Efectivo restringido","Inversiones temporales","Efectivo"],a:3},
+{q:"¿Cómo se clasifican los tributos en Bolivia?",o:["Impuestos, tasas, contribuciones especiales y patentes","Impuestos nacionales y regionales","Tasas, impuestos y patentes","Impuestos nacionales, departamentales y municipales"],a:0},
+{q:"¿En qué tipo de sociedad comercial las obligaciones están garantizadas por la responsabilidad ilimitada y solidaria de todos los socios?",o:["Sociedad de Responsabilidad Limitada","Sociedad Anónima","Sociedad Colectiva","Asociación accidental"],a:2},
+{q:"¿Qué actividades económicas pertenecen al Régimen Tributario Simplificado?",o:["Transporte público urbano e interprovincial","Artesanos, tiendas de barrio y comercio minorista","Comerciantes minoristas, vivanderos y artesanos","Comerciantes minoristas, transporte público y artesanos"],a:2},
+{q:"Según los principios de contabilidad generalmente aceptados, ¿qué principio implica que las transacciones deben registrarse en el momento en que ocurren, independientemente del flujo de efectivo?",o:["Uniformidad","Valuación al costo","Devengado","Realización"],a:2},
+{q:"Según la Ley General del Trabajo, ¿cuál es la jornada laboral máxima para mujeres?",o:["35 horas semanales","48 horas semanales","42 horas semanales","40 horas semanales"],a:3},
+{q:"¿Cómo se obtiene el costo primo dentro de la contabilidad de costos?",o:["Costo de materiales directos y los costos indirectos de fabricación","Costo de oportunidad y costos de producción","Costo de materiales directos y costo de la mano de obra directa","Costo de materiales directos y los costos de producción"],a:2},
+{q:"¿Cómo se calcula la liquidación del aguinaldo?",o:["Promedio del total ganado de los últimos 3 meses","Promedio del total ganado de los 12 meses del año","Total ganado del último mes","Promedio del total ganado de los últimos 2 meses"],a:0},
+{q:"¿Cuáles son los modos de giro de una letra de cambio?",o:["A la fecha, al vencimiento, a días o meses fecha","A días o meses vista, a días o meses fecha, a la fecha, a la exigencia del beneficiario","Sólo a la fecha definida en el documento","A la vista, a días o meses vista, a días o meses fecha, a la fecha"],a:3}
+];
+
+let current=0,answers=Array(questions.length).fill(null);
+function render(){
+ const x=questions[current];
+ counter.textContent=`Pregunta ${current+1} de ${questions.length}`;
+ bar.style.width=((current+1)/questions.length*100)+"%";
+ let opts=x.o.map((v,i)=>`<div class="option ${answers[current]===i?"selected":""}" onclick="pick(${i})"><div class="letter">${String.fromCharCode(65+i)}</div><div class="text">${v}</div></div>`).join("");
+ game.innerHTML=`<div class="number">Pregunta ${current+1}</div><p class="question">${x.q}</p>${opts}${x.n?`<div class="note">⚠️ ${x.n}</div>`:""}<div class="actions"><button class="secondary" onclick="prev()" ${current===0?"disabled":""}>Anterior</button><button class="primary" onclick="next()" ${answers[current]===null?"disabled":""}>${current===questions.length-1?"Aceptar y ver resultados":"Aceptar y continuar"}</button></div>`;
+}
+function pick(i){answers[current]=i;render()}
+function prev(){if(current){current--;render()}}
+function next(){if(answers[current]===null)return;if(current<questions.length-1){current++;render()}else results()}
+function results(){
+ let score=answers.reduce((s,v,i)=>s+(v===questions[i].a?1:0),0);
+ counter.textContent="Resultado final";bar.style.width="100%";
+ let h=`<h2 style="text-align:center">✅ Resultado final</h2><div class="score">${score} de ${questions.length} correctas</div><p style="text-align:center">Revisión completa de las 21 preguntas.</p>`;
+ questions.forEach((x,i)=>{let ok=answers[i]===x.a;let u=answers[i]===null?"Sin respuesta":String.fromCharCode(65+answers[i])+". "+x.o[answers[i]];let c=String.fromCharCode(65+x.a)+". "+x.o[x.a];h+=`<div class="review ${ok?"correct":"wrong"}"><h3>${i+1}. ${x.q}</h3><div class="${ok?"correctText":"wrongText"}">${ok?"✅ Correcta":"❌ Incorrecta"}</div><div class="answer">Tu respuesta: <b>${u}</b></div><div class="answer correctText">Respuesta correcta: <b>${c}</b></div></div>`});
+h+=`<button class="primary" onclick="restart()" style="width:100%;margin-top:10px">🔄 Volver a jugar</button>`;game.innerHTML=h;
+}
+function restart(){current=0;answers=Array(questions.length).fill(null);render()}
+render();
+</script>
+</body>
+</html>
